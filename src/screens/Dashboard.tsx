@@ -1,5 +1,7 @@
 import { useAuth } from "@//context/auth.context";
 import { GradientPage } from "@/components/GradientPage";
+import { firebaseAuth } from "@/firebase";
+import { signOut } from "firebase/auth";
 
 export const DashboardScreen = () => {
     // Use auth to show some user information
@@ -10,8 +12,15 @@ export const DashboardScreen = () => {
 
     return (
         <GradientPage>
-            <div className="rounded-lg bg-white m-w-full m-4">
-                {user.email}
+            <div className="flex flex-col items-start justify-start bg-white w-1/2 p-12 rounded-lg shadow-lg mt-8 mx-auto">
+                <div className="flex justify-between items-start w-full">
+                    <img src="/logo.svg" className="max-w-[200px] mb-4" />
+                    <button onClick={() => { void signOut(firebaseAuth); }}>
+                        Sign out
+                    </button>
+                </div>
+                <p className="text-xl">Welcome back careibu!</p>
+                <p>{user.email}</p>
             </div>
         </GradientPage>
     );

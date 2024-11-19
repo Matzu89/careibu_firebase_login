@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
@@ -24,10 +24,17 @@ const schema = yup.object({
 
 export const AuthForm: React.FC<{ mode: AuthMode }> = ({ mode }) => {
     const [loading, setLoading] = useState<boolean>(false);
-    const [somethingWrong, setSomethingWrong] = useState<boolean>(false);
+    const [somethingWrong, setSomethingWrong] = useState<AuthMode | null>(null);
     const { register, handleSubmit, formState: { errors } } = useForm<AuthFormInput>({
         resolver: yupResolver(schema)
     });
+
+    // If something went wrong in diff AuthMode, do not display the error message anymore (reset value)
+    useEffect(() => {
+        if (somethingWrong !== mode) {
+            setSomethingWrong(null);
+        }
+    }, [somethingWrong, setSomethingWrong, mode]);
 
     // I created AuthMode to reuse this form for both scenarios. Therefore I use memos to determine labels only on mode change.
     const title: string = useMemo(() => {
@@ -40,7 +47,7 @@ export const AuthForm: React.FC<{ mode: AuthMode }> = ({ mode }) => {
 
     const onSubmit = async (data: AuthFormInput) => {
         setLoading(true);
-        setSomethingWrong(false);
+        setSomethingWrong(null);
         // Don't try this at home
         if (mode === AuthMode.LOGIN) {
             void login(data);
@@ -54,7 +61,7 @@ export const AuthForm: React.FC<{ mode: AuthMode }> = ({ mode }) => {
             await signInWithEmailAndPassword(firebaseAuth, data.email, data.password);
         } catch (err) {
             console.log(err);
-            setSomethingWrong(true);
+            setSomethingWrong(mode);
         } finally {
             setLoading(false);
         }
@@ -65,7 +72,7 @@ export const AuthForm: React.FC<{ mode: AuthMode }> = ({ mode }) => {
             await createUserWithEmailAndPassword(firebaseAuth, data.email, data.password);
         } catch (err) {
             console.log(err);
-            setSomethingWrong(true);
+            setSomethingWrong(mode);
         } finally {
             setLoading(false);
         }
@@ -78,7 +85,7 @@ export const AuthForm: React.FC<{ mode: AuthMode }> = ({ mode }) => {
                     {title}
                 </h2>
 
-                {somethingWrong && (
+                {somethingWrong !== null && (
                     <div className="text-sm text-red-600">
                         Something went wrong. please check your credentials.
                     </div>
