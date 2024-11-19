@@ -9,9 +9,9 @@ export const OnBoarding = () => {
     return (
         <GradientPage>
             <div className="flex justify-between items-stretch w-full h-full">
-                <div className="w-1/2 p-8 h-full" style={{ backgroundImage: `url('/foto${authMode === AuthMode.SIGN_UP ? 2 : 3}.webp')`, backgroundSize: 'cover' }}>
+                <div className="hidden flex-shrink-0 lg:flex w-1/2 p-8 h-full" style={{ backgroundImage: `url('/foto${authMode === AuthMode.SIGN_UP ? 2 : 3}.webp')`, backgroundSize: 'cover' }}>
                 </div>
-                <div className="flex flex-col items-center justify-start bg-white w-1/2 p-12 shadow-lg">
+                <div className="flex flex-col items-center justify-start bg-white w-full lg:w-1/2 p-12 shadow-lg">
                     <ModeSwitcher currentMode={authMode} switchMode={setAuthMode} />
                     <img src="/logo.svg" className="max-w-[200px] mb-4" />
                     <h1 className="text-xl mb-0">Welcome to careibu!</h1>
