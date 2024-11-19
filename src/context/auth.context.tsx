@@ -2,12 +2,13 @@ import React, { createContext, useContext, useEffect, useState, ReactNode } from
 import { onAuthStateChanged, User } from "firebase/auth";
 import { firebaseAuth } from "@/firebase";
 
+
+// AuthContext to keep track of auth state, provided by firebase
 interface IAuthContext {
     currentUser: User | null;
     loading: boolean;
 }
 
-// Create the context
 const AuthContext = createContext<IAuthContext | undefined>(undefined);
 
 // AuthProvider component
